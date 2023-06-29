@@ -1,0 +1,37 @@
+project:
+  type: website
+  output-dir: docs
+execute: 
+  cache: true
+  freeze: auto
+
+website:
+  title: "FIP-606"
+  
+  navbar:
+    right: 
+      - icon: linkedin
+        href: https://www.linkedin.com/in/dyxaso/
+      - icon: github
+        href: https://github.com/dyxaso
+      - icon: instagram
+        href: https://www.instagram.com/yurixavier.s/?igshid=MzNlNGNkZWQ4Mg%3D%3D
+      - icon: send
+        href: mailto:daniel.y.sousa@ufv.br
+    left:
+      - text: Conjunto de Dados
+        menu: 
+          - href: agata.qmd
+            text: Exploração & Estatística
+        
+     
+format:
+  html:
+    theme: 
+      light: default
+      dark: solar
+    css: styles.css
+
+    toc: true
+editor: visual
+

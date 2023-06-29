@@ -1,0 +1,1 @@
+"0","b <- boxcox(lm(insects$count+0.1 ~ 1)) # o valor "

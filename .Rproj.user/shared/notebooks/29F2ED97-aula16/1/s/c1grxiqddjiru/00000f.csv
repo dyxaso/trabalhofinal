@@ -1,0 +1,6 @@
+"0","BRA <- ne_states(country = ""Brazil"", "
+"0","                    returnclass = ""sf"")"
+"0","MG <- BRA |> filter(name_en == ""Minas Gerais"")"
+"0","geom_sf(color = ""black"","
+"0","          fill = ""white"") +"
+"0","  geom_point(data = sbr, aes(longitude, latitude), alpha = 0.5)"

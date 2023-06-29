@@ -1,0 +1,331 @@
+---
+title: "Agata"
+author: "Daniel Yuri Xavier de Sousa"
+format: html
+editor: visual
+
+execute: 
+  freeze: auto
+  cache: true
+  warning: false
+---
+
+### Análise Exploratória do Conjunto
+
+O conjunto AGATA traz a avaliação da eficácia de um fator com 10 níveis. No trabalho em questão, 10 fungicidas foram utilizados.
+
+Carregamento de pacotes com funções gerais:
+
+```{r}
+library(tidyverse)
+library(gsheet)
+library(tidyr)
+```
+
+Analisando o conunto:
+
+```{r}
+agata <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1dinE1t_Bjpj4UQnlSpf3cBFWv76Ijal1/edit#gid=393309176")
+
+# Contruindo Histogramas para visualizar como os dados estão distribuídos:
+
+# Para a Severidade:
+agata |> 
+  ggplot(aes(me_sev))+
+  geom_histogram(bins = 7, fill ="grey")+
+  theme_bw()
+
+# Para Produção Total em Kg/ha:
+
+agata |> 
+  ggplot(aes(produt))+
+  geom_histogram(bins = 7, fill = "grey")+
+  theme_bw()
+
+# Para Produtividade em Sacas Por Hectare:
+
+agata |>
+  ggplot(aes(sc_ha))+
+  geom_histogram(bins = 7, fill = "grey")+
+  theme_bw()
+
+# Para a % Clorofila nas Folhas:
+
+agata |>
+  ggplot(aes(me_clorofilometro))+
+  geom_histogram(bins = 7, fill = "grey")+
+  theme_bw()
+```
+
+Visualizando em gráficos a relação entre os tratamentos (fator) e as resposta (variáveis de interesse):
+
+```{r}
+# Tratamento influênciando a Severidade:
+
+sev <- agata |> 
+  ggplot(aes(trat, me_sev))+
+  geom_boxplot()+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(limits = c("Testemunha", "Miravis Duo", "Miravis", "Orkestra",
+                              "Bion","Trichoderma", "Miravis Duo+Trichoderma",
+                              "Miravis + Trichoderma", "Miravis Duo+ Bion", "Miravis+ Bion"))+
+  labs(x = "Tratamento")+
+  labs(y = "Severidade %")+
+  scale_y_continuous(breaks = seq(0,100, 10), limits = c(0,100))
+sev
+
+# Tratamento influênciando na Produção Total:
+
+produçao <- agata |> 
+  ggplot(aes(trat, produt))+
+  geom_boxplot()+
+  theme_minimal()+
+  ylim(0, 60000)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(limits = c("Testemunha", "Miravis Duo", "Miravis", "Orkestra",
+                              "Bion","Trichoderma", "Miravis Duo+ Trichoderma",
+                              "Miravis + Trichoderma", "Miravis Duo+ Bion", "Miravis+ Bion"))+
+  labs(x = "Tratamento")+
+  labs(y = "Produção Total (kg/ha)")+
+  scale_y_continuous(breaks = seq(40000, 60000, 2000), limits = c(40000,60000))
+produçao
+
+# Tratamento influênciando na Produtividade (Sacas por Hectare):
+
+produtividade <- agata |> 
+  ggplot(aes(trat, sc_ha))+
+  geom_boxplot()+
+  ylim(0, 2000)+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(limits = c("Testemunha", "Miravis Duo", "Miravis", "Orkestra",
+                              "Bion","Trichoderma", "Miravis Duo+ Trichoderma",
+                              "Miravis + Trichoderma", "Miravis Duo+ Bion", "Miravis+ Bion"))+
+  labs(x = "Tratamento")+
+  labs(y = "Produtividade (Sacas/Hectare)")
+produtividade
+
+# Tratamento influênciando na % de Clorofila:
+
+cloro <- agata |>
+  ggplot(aes(trat, me_clorofilometro))+
+  geom_boxplot()+
+  ylim(0, 100)+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(limits = c("Testemunha", "Miravis Duo", "Miravis", "Orkestra",
+                              "Bion","Trichoderma", "Miravis Duo+ Trichoderma",
+                              "Miravis + Trichoderma", "Miravis Duo+ Bion", "Miravis+ Bion"))+
+  labs(x = "Tratamento")+
+  labs(y = "Clorofila %")
+cloro
+```
+
+### Realizando análise de correlação entre as variáveis resposta:
+
+```{r}
+# Selencionando somente as variáveis repostas:
+
+agata2 = agata |> 
+  dplyr::select(me_sev, produt, sc_ha, me_clorofilometro)
+
+# Selecionando as colunas de 1 a 4 do data (agata2) e calculando a matriz de correlação de Spearman para essas colunas:
+
+coRes <- cor(agata2 |>  dplyr::select(1:4), method = "spearman")
+
+# Criando um gráfico de correlação:
+
+library(corrplot)
+corrplot(coRes, method = 'number', type = "lower")
+```
+
+### Ajustando o modelo de ANOVA para Severidade:
+
+```{r}
+# Criando uma nova coluna em agata (Bloco = bloc). Neste caso estamos transformandoa variável b1 em 1:
+
+agata = agata |> mutate(bloc = case_when(
+  bloco == "b1" ~ 1,
+  bloco == "b2" ~ 2,
+  bloco == "b3" ~ 3,
+  bloco == "b4" ~ 4))
+
+# Trasnformando bloc e trat em fator:
+
+agata$bloc = as.factor(agata$bloc)
+agata$trat = as.factor(agata$trat)
+
+# Como temos um conjunto de dados com apenas um fator e 10 níveis desse fator, uma abordagem comum é utilizar um modelo de regressão linear múltipla ou um modelo de análise de variância (ANOVA):
+
+# Para Severidade
+aov_sev= aov(me_sev ~ trat + bloc, data = agata)
+summary(aov_sev)
+
+# Checando as Premissas:
+
+library(performance)
+check_normality(aov_sev)
+check_heteroscedasticity(aov_sev)
+
+# Inicialmente, apenas a premissa de heterocedasticidade foi atendida.
+
+# Criaremos uma nova coluna transformada com o log + 0.5:
+agata$log_me_sev <- log(agata$me_sev + 0.5)
+
+# Ajustar o modelo ANOVA usando a coluna transformada:
+aov_sev <- aov(log_me_sev ~ trat + bloc, data = agata)
+
+# Checando novamente as premissas:
+
+check_normality(aov_sev)
+check_heteroscedasticity(aov_sev)
+
+# Usaremos o pacote **emmeans** para calcular as médias estimadas dos níveis do fator **trat** a partir do modelo ANOVA ajustado **aov_sev**:
+
+library(emmeans)
+
+aov2_means <- emmeans(aov_sev, ~ trat, type = "response")
+aov2_means
+
+#Para realizar, compara e exibir os resultados dos teste de comparações mútiplas,utilzaremos os pacotes **multicompView** e **multicomp**:
+
+library(multcompView)
+library(multcomp)
+
+cld(aov2_means)
+
+# Os resultados avaliados desse método, apesar de corretos, dificultariam a visualização e interpretação dos mesmos. Por ter criado grupos de 1 a 6, dificultando assim a visualização em gráficos, utilizaremos outra metodologia para agruparmos os resultados. 
+
+# Utilizaremos a função dic do pacote library(ExpDes.pt) para visualizarmos as comparações:
+
+library(ExpDes.pt)
+#Utilizamos o mcomp = "ccboot" para controlarmos o erro global de comparações em teste de comparações múltiplas.
+
+tab <- dic(agata$trat, agata$me_sev, mcomp = "ccboot")
+str(agata)
+
+# Criando grupos apartir da análise "ccboot":
+agata <- agata |> 
+  mutate(grupo = case_when(
+    trat %in% c("Testemunha", "Trichoderma", "Bion") ~ "Grupo A",
+    trat %in% c("Orkestra", "Miravis") ~ "Grupo B",
+    trat %in% c("Miravis+ Bion", "Miravis Duo+ Trichoderma", "Miravis + Trichoderma", 'Miravis Duo', 'Miravis Duo+ Bion' ) ~ "Grupo C"))
+
+# Gráfico boxplot do tratamento sobre a resposta severidade, preenchidos por grupos e tratamentos:
+
+ggplot(agata, aes(trat, me_sev, fill = grupo)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_discrete(limits = c("Testemunha", "Miravis Duo", "Miravis", "Orkestra",
+                              "Bion", "Trichoderma", "Miravis Duo+ Trichoderma",
+                              "Miravis + Trichoderma", "Miravis Duo+ Bion", "Miravis+ Bion")) +
+  labs(x = "Tratamento") +
+  labs(y = "Severidade (%)") +
+  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 100)) +
+  scale_fill_manual(values = c("Grupo A" = "#00C19A", "Grupo B" = "steelblue", "Grupo C" = "#E68613"), name = "Grupo de Tratamento")
+
+```
+
+Acerca do resultado acima: Aplicação em análises comparativas: Tanto o "ccboot" quanto o "sk" são utilizados em análises comparativas entre grupos ou fatores, permitindo a identificação de diferenças significativas entre eles.
+
+A vantagem do "ccboot" está na sua capacidade de controlar o erro do tipo I (fALSO POSITIVO) em comparações múltiplas por meio do bootstrap e correção de Bonferroni. Isso é especialmente relevante quando há um grande número de comparações a serem realizadas, reduzindo a chance de falsos positivos.
+
+### Ajustando um modelo de ANOVA para Produção:
+
+```{r}
+aov_produt <- aov(produt ~ trat + bloc, data = agata)
+
+summary(aov_produt)
+
+library(performance)
+check_normality(aov_produt)
+check_heteroscedasticity(aov_produt)
+
+aov2_means <- emmeans(aov_produt, ~trat,
+                      type = "response")
+aov2_means
+
+cld(aov2_means)
+
+produçao
+```
+
+### Ajustando um modelo de ANOVA para Produtividade:
+
+```{r}
+
+aov_produtividade <- aov(sc_ha ~ trat + bloc, data = agata)
+
+summary(aov_produtividade)
+
+library(performance)
+check_normality(aov_produtividade)
+check_heteroscedasticity(aov_produtividade)
+
+aov3_means <- emmeans(aov_produtividade, ~trat,
+                      type = "response")
+aov3_means
+
+cld(aov3_means)
+
+produtividade
+```
+
+### Ajustando um modelo de ANOVA para % Clorofila:
+
+```{r}
+aov_cloro= aov(me_clorofilometro ~ trat + bloc, data = agata)
+summary(aov_cloro)
+
+# Checando as Premissas:
+
+library(performance)
+check_normality(aov_cloro)
+check_heteroscedasticity(aov_cloro)
+
+library(emmeans)
+
+aov4_means <- emmeans(aov_cloro, ~ trat, type = "response")
+aov4_means
+
+#Para realizar, compara e exibir os resultados dos teste de comparações mútiplas,utilzaremos os pacotes **multicompView** e **multicomp**:
+
+library(multcompView)
+library(multcomp)
+
+cld(aov4_means)
+
+library(ExpDes.pt)
+
+#Utilizamos o mcomp = "ccboot" para controlarmos o erro global de comparações em teste de comparações múltiplas.
+
+
+tab5 <- dic(agata$trat, agata$me_clorofilometro, mcomp = "ccboot")
+
+
+# Criando grupos apartir da análise "ccboot":
+agata <- agata |> 
+  mutate(grupo = case_when(
+    trat %in% c("Miravis Duo+ Trichoderma", "Trichoderma") ~ "Grupo A",
+    trat %in% c("Orkestra", "Miravis + Trichoderma", "Bion") ~ "Grupo B",
+    trat %in% c("Miravis", "Testemunha", "Miravis Duo+ Bion", "Miravis+ Bion" ) ~ "Grupo C",
+    trat %in% c("Miravis Duo") ~ "Grupo D"))
+
+
+# Gráfico boxplot do tratamento sobre a resposta severidade, preenchidos por grupos e tratamentos:
+
+ggplot(agata, aes(trat, me_clorofilometro, fill = grupo)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_discrete(limits = c("Testemunha", "Miravis Duo", "Miravis", "Orkestra",
+                              "Bion", "Trichoderma", "Miravis Duo+ Trichoderma",
+                              "Miravis + Trichoderma", "Miravis Duo+ Bion", "Miravis+ Bion")) +
+  labs(x = "Tratamento") +
+  labs(y = "Clorofila %") +
+  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(40, 55)) +
+  scale_fill_manual(values = c("Grupo A" = "#00C19A", "Grupo B" = "steelblue", "Grupo C" = "#E68613", name = "Grupo de Tratamento", "Grupo D" = "yellow"))
+
+```

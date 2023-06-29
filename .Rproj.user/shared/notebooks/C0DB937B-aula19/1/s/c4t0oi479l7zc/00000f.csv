@@ -1,0 +1,27 @@
+"0","install.packages(""easyanova"")
+"
+"2","WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+"
+"2","Installing package into ‘C:/Users/LG/AppData/Local/R/win-library/4.3’
+(as ‘lib’ is unspecified)
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.3/easyanova_8.0.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 335726 bytes (327 KB)
+"
+"2","downloaded 327 KB
+
+"
+"1","package ‘easyanova’ successfully unpacked and MD5 sums checked
+"
+"1","
+"
+"1",""
+"1","The downloaded binary packages are in
+	C:\Users\LG\AppData\Local\Temp\RtmpKKFsWw\downloaded_packages"
+"1",""
+"1","
+"

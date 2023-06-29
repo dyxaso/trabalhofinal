@@ -1,0 +1,14 @@
+"0","library(tidyverse)"
+"0","library(readxl)"
+"0","library(readr)"
+"0","library(ggplot2)"
+"0","library(r4pde) "
+"0","library(rnaturalearth)"
+"2","The legacy packages maptools, rgdal, and rgeos, underpinning this package
+will retire shortly. Please refer to R-spatial evolution reports on
+https://r-spatial.org/r/2023/05/15/evolution4.html for details.
+This package is now running under evolution status 0 
+"
+"2","Support for Spatial objects (`sp`) will be deprecated in {rnaturalearth} and will be removed in a future release of the package. Please use `sf` objects with {rnaturalearth}. For example: `ne_download(returnclass = 'sf')`
+"
+"0","library(rnaturalearthhires) ##advindo do github utilizando remotes::install_github (pacote)"

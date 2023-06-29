@@ -1,0 +1,75 @@
+"0","library(car)"
+"2","Carregando pacotes exigidos: carData
+"
+"2","
+Attaching package: ‘car’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    recode
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    some
+
+"
+"0","library(lme4)"
+"2","Carregando pacotes exigidos: Matrix
+"
+"2","
+Attaching package: ‘Matrix’
+
+"
+"2","The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+"
+"0","milho$block <- as.factor(milho$block)"
+"0","mix2 <- lmer (index~block + hybrid*method +"
+"0","                (1|block/hybrid), data = milho)"
+"2","Warning: unable to evaluate scaled gradient"
+"2","Warning: Model failed to converge: degenerate  Hessian with 1 negative eigenvalues"
+"0","anova(mix2)"
+"1","Analysis of Variance Table"
+"1","
+"
+"1","             "
+"1"," npar"
+"1","  Sum Sq"
+"1"," Mean Sq"
+"1"," F value"
+"1","
+block        "
+"1","    3"
+"1","   5.376"
+"1","   1.792"
+"1","  0.1064"
+"1","
+hybrid       "
+"1","    5"
+"1"," 264.420"
+"1","  52.884"
+"1","  3.1397"
+"1","
+method       "
+"1","    1"
+"1","  79.606"
+"1","  79.606"
+"1","  4.7262"
+"1","
+hybrid:method"
+"1","    5"
+"1"," 265.281"
+"1","  53.056"
+"1","  3.1500"
+"1","
+"
+"0","check_normality(mix2)"
+"1","[32mOK: residuals appear as normally distributed (p = 0.621).
+[39m"
+"0","check_heteroscedasticity(mix2)"
+"1","[31mWarning: Heteroscedasticity (non-constant error variance) detected (p = 0.009).
+[39m"

@@ -1,0 +1,4 @@
+"0","h2 <- mofo2 |> "
+"0","  ggplot(aes(yld))+"
+"0","  geom_histogram(bins = 10)"
+"0","h2"

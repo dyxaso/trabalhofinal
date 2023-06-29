@@ -1,0 +1,5 @@
+"0","sbr <- RustSoybean"
+"0",""
+"0","BRA <- ne_countries(country = ""Brazil"", "
+"0","                    returnclass = ""sf"")"
+"0","geom_sf(fill = ""white"")"

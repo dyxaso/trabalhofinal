@@ -1,0 +1,4 @@
+"0","mofo |> "
+"0","  ggplot(aes(treat, yld))+"
+"0","  geom_col()+"
+"0","  facet_wrap(~study)"

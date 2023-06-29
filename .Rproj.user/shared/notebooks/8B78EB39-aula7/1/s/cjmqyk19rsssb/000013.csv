@@ -1,0 +1,7 @@
+"0","h <- mofo |> "
+"0","  ggplot(aes(scl))+"
+"0","  geom_histogram(bins = 10)"
+"0",""
+"0","b <- mofo |> "
+"0","  ggplot(aes(scl))+"
+"0","  geom_boxplot()"

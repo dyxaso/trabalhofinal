@@ -1,0 +1,40 @@
+"0","install.packages(""ExpDes.pt"")
+"
+"2","WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+"
+"2","Installing package into ‘C:/Users/LG/AppData/Local/R/win-library/4.3’
+(as ‘lib’ is unspecified)
+"
+"2","also installing the dependency ‘stargazer’
+
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.3/stargazer_5.2.3.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 617421 bytes (602 KB)
+"
+"2","downloaded 602 KB
+
+"
+"2","trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.3/ExpDes.pt_1.2.2.zip'
+"
+"2","Content type 'application/zip'"
+"2"," length 580132 bytes (566 KB)
+"
+"2","downloaded 566 KB
+
+"
+"1","package ‘stargazer’ successfully unpacked and MD5 sums checked
+"
+"1","package ‘ExpDes.pt’ successfully unpacked and MD5 sums checked
+"
+"1","
+"
+"1",""
+"1","The downloaded binary packages are in
+	C:\Users\LG\AppData\Local\Temp\RtmpKKFsWw\downloaded_packages"
+"1",""
+"1","
+"

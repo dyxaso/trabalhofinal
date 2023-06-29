@@ -1,0 +1,14 @@
+{
+  "hash": "a09f9b333b7a908412ae3ac988bcfdc6",
+  "result": {
+    "markdown": "---\ntitle: \"Gráficos em ggplot part.4\"\nauthor: \"Yuri combinação com aula do Prof\"\nformat: html\n\nexecute: \n  freeze: auto\n  cache: true\n  warning: false\n---\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-1_3cd0e4de8bfe01c1557967580ef005b0'}\n\n```{.r .cell-code}\nlibrary(tidyverse)\nlibrary(readxl)\n\nmofo <- read_excel(\"dados-diversos.xlsx\", \"mofo\")\n```\n:::\n\n\n## Gráfico de Colunas:\n\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-2_81b8256c40274c9692820a0cb6008113'}\n\n```{.r .cell-code}\nmofo |> \n  ggplot(aes(treat, yld))+\n  geom_col()+\n  facet_wrap(~study)\n```\n\n::: {.cell-output-display}\n![](aula7_files/figure-html/unnamed-chunk-2-1.png){width=672}\n:::\n:::\n\n\n## Histograma e boxplot :\n\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-3_da128bc03b2f17ce19d3c383e9941011'}\n\n```{.r .cell-code}\nh <- mofo |> \n  ggplot(aes(scl))+\n  geom_histogram(bins = 10)\n\nb <- mofo |> \n  ggplot(aes(scl))+\n  geom_boxplot()\n```\n:::\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-4_a2bcf9a335dc3b8cc0e8a81d033d130e'}\n\n```{.r .cell-code}\nlibrary(patchwork)\nh / b\n```\n\n::: {.cell-output-display}\n![](aula7_files/figure-html/unnamed-chunk-4-1.png){width=672}\n:::\n:::\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-5_c2a86080bf233c6672bf7446b45c3df5'}\n\n```{.r .cell-code}\nmofo2 <- mofo\n```\n:::\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-6_3e15ef6a9bfaffb79ebb68cf2def037d'}\n\n```{.r .cell-code}\nh2 <- mofo2 |> \n  ggplot(aes(yld))+\n  geom_histogram(bins = 10)\nh2\n```\n\n::: {.cell-output-display}\n![](aula7_files/figure-html/unnamed-chunk-6-1.png){width=672}\n:::\n\n```{.r .cell-code}\nh / h2\n```\n\n::: {.cell-output-display}\n![](aula7_files/figure-html/unnamed-chunk-6-2.png){width=672}\n:::\n:::\n\n::: {.cell hash='aula7_cache/html/unnamed-chunk-7_5136460d2fae0d167ca74392b7f7bee2'}\n\n```{.r .cell-code}\nsurvey <- read_excel(\"dados-diversos.xlsx\", \"survey\")\n\nsurvey |> \n  filter(state == \"RS\") |> \n  count(species, residue) |> \n  arrange(n) |> \n  rename(res = residue) |> \n  mutate(n_class = case_when(\n          n < 30 ~ \"baixa\",\n          TRUE ~ \"Alta\"))\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n# A tibble: 4 × 4\n  species res         n n_class\n  <chr>   <chr>   <int> <chr>  \n1 Fspp    corn       22 baixa  \n2 Fspp    soybean    26 baixa  \n3 Fgra    corn      147 Alta   \n4 Fgra    soybean   255 Alta   \n```\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
