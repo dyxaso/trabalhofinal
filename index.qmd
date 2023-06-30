@@ -6,10 +6,10 @@ about:
 
 \
 
-![](pinta preta.jpg){width="302" height="284"}
+![](pinta%20preta.jpg){width="302" height="284"}
 
 ![](fung.jpg){width="286" height="283"}
 
-###   DELINEAMENTO EXPERIMENTAL
+### DELINEAMENTO EXPERIMENTAL
 
 ![](apr.png)
